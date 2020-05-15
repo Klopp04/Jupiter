@@ -1,0 +1,66 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-05-11 21:45:56
+ * @LastEditTime: 2020-05-14 21:15:55
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-demo\vue01.html
+ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0">
+    <title>todolist 2020/5/13 15:45</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id='app'>
+
+        <div class="todoList">
+            <input type="text" v-model='value'>
+            <button  @click='valueCommit'>commit</button>
+            <ul>
+                <li v-for="(item, index) in todoList" :key="index"
+                    @click='todoClick(index)'>{{item}}</li>
+            </ul>
+            <ul>
+                <li v-for="(item, index) in doneList" :key="index"
+                    >
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                value: '',
+                todoList: [],
+                doneList: []
+            },
+            mounted() {
+                console.log('todo-list练习')
+            },
+            methods: {
+                valueCommit() {
+                    this.todoList.push(this.value)
+                    this.value = ''
+                },
+                todoClick(index){
+                    let value = this.todoList[index]
+                    this.doneList.push(value)
+                    this.todoList.slice()
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
