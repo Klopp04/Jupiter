@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-11 21:45:56
- * @LastEditTime: 2020-05-14 21:15:55
+ * @LastEditTime: 2020-05-20 18:00:25
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-demo\vue01.html
@@ -12,32 +12,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0">
-    <title>todolist 2020/5/13 15:45</title>
+    <title>todolist 2020/5/13 15:45  2020/5/20 18:00</title>
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
     <div id='app'>
-
         <div class="todoList">
             <input type="text" v-model='value'>
-            <button  @click='valueCommit'>commit</button>
+            <button @click='valueCommit'>commit</button>
+            <div>TODO</div>
             <ul>
-                <li v-for="(item, index) in todoList" :key="index"
-                    @click='todoClick(index)'>{{item}}</li>
+                <!-- <li v-for="(item, index) in todoList" :key="index"
+                    @click='todoClick(index)'>{{item}}</li> -->
+                <li is='todo-cmp' 
+                    v-for="(item, index) in todoList" :key="index"
+                    :value="{item,index,type:'todo'}"
+                    @todoclick='todoClick(index)'>
+
+                </li>
             </ul>
+            <div>DONE</div>
             <ul>
-                <li v-for="(item, index) in doneList" :key="index"
-                    >
+                <!-- <li v-for="(item, index) in doneList" :key="index" @click='doneClick(index)'>
+                    {{item}}
+                </li> -->
+                <li is='todo-cmp' 
+                    v-for="(item, index) in doneList" :key="index"
+                    :value="{item,index,type:'done'}"
+                    @doneclick='doneClick(index)'>
 
                 </li>
             </ul>
         </div>
     </div>
 
-
     <script>
+        Vue.component('todoCmp', {
+            data() {
+                return {
+                    val: this.value
+                }
+            },
+            props: {
+                value:{
+                    type:Object,
+                    default:{}
+                }
+            },
+            template: '<li @click="todoClick()">{{val.item}}</li>',
+            methods:{
+                todoClick(){
+                    if(this.val.type=='todo'){
+                        this.$emit('todoclick',this.val.index)
+                    }else{
+                        this.$emit('doneclick',this.val.index)
+                    }
+                }
+            }
+        })
         var app = new Vue({
             el: '#app',
             data: {
@@ -53,10 +87,15 @@
                     this.todoList.push(this.value)
                     this.value = ''
                 },
-                todoClick(index){
+                todoClick(index) {
                     let value = this.todoList[index]
                     this.doneList.push(value)
-                    this.todoList.slice()
+                    this.todoList.splice(index, 1)
+                },
+                doneClick(index) {
+                    let value = this.doneList[index]
+                    this.todoList.push(value)
+                    this.doneList.splice(index, 1)
                 }
             },
         })
