@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-11 21:45:56
- * @LastEditTime: 2020-05-20 18:00:25
+ * @LastEditTime: 2020-05-26 15:22:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-demo\vue01.html
@@ -27,7 +27,7 @@
                 <!-- <li v-for="(item, index) in todoList" :key="index"
                     @click='todoClick(index)'>{{item}}</li> -->
                 <li is='todo-cmp' 
-                    v-for="(item, index) in todoList" :key="index"
+                    v-for="(item, index) in todoList" :key="item.id"
                     :value="{item,index,type:'todo'}"
                     @todoclick='todoClick(index)'>
 
@@ -39,10 +39,9 @@
                     {{item}}
                 </li> -->
                 <li is='todo-cmp' 
-                    v-for="(item, index) in doneList" :key="index"
+                    v-for="(item, index) in doneList" :key="item.id"
                     :value="{item,index,type:'done'}"
                     @doneclick='doneClick(index)'>
-
                 </li>
             </ul>
         </div>
@@ -61,13 +60,13 @@
                     default:{}
                 }
             },
-            template: '<li @click="todoClick()">{{val.item}}</li>',
+            template: `<li @click="todoClick()">{{val.item.num}}::::{{val.index}}</li>`,
             methods:{
                 todoClick(){
                     if(this.val.type=='todo'){
-                        this.$emit('todoclick',this.val.index)
+                        this.$emit('todoclick',this.value.index)
                     }else{
-                        this.$emit('doneclick',this.val.index)
+                        this.$emit('doneclick',this.value.index)
                     }
                 }
             }
@@ -77,25 +76,35 @@
             data: {
                 value: '',
                 todoList: [],
-                doneList: []
+                doneList: [],
+                newId: 0
             },
             mounted() {
                 console.log('todo-list练习')
+                let arr = ['a:1','b:2','c:3']
+                let newArr = JSON.parse(JSON.stringify(arr))
+                console.log(typeof newArr)
+                console.log(newArr)
             },
             methods: {
                 valueCommit() {
-                    this.todoList.push(this.value)
+                    this.todoList.push({num :this.value, id:++this.newId})
                     this.value = ''
                 },
                 todoClick(index) {
                     let value = this.todoList[index]
                     this.doneList.push(value)
                     this.todoList.splice(index, 1)
+                    console.log(this.todoList)
+                    console.log(this.doneList)
+
                 },
                 doneClick(index) {
                     let value = this.doneList[index]
                     this.todoList.push(value)
                     this.doneList.splice(index, 1)
+                    console.log(this.todoList)
+                    console.log(this.doneList)
                 }
             },
         })
