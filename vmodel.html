@@ -1,0 +1,64 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-02 16:56:31
+ * @LastEditTime: 2020-06-02 17:39:39
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-demo\vmodel.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-model</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id='app'>
+        <!-- <comp-model :value='searchTxt' @input='getData'>
+
+        </comp-model> -->
+        <!-- <comp-model :value='searchTxt' @input='serachTxt = $event'>
+
+        </comp-model> -->
+        <comp-model v-model='searchTxt'>
+
+        </comp-model>
+    </div>
+    <script>
+        var compModel = ({
+            props:{
+                value:{
+                    type:String
+                }
+            },
+            data() {
+                return {
+                    
+                }
+            },
+            template:`<input type="text" :value='value' @input='sendMess'>`,
+            methods:{
+                sendMess(event){
+                    this.$emit('input', event.target.vaule)
+                }
+            }
+        })
+        var app = new Vue({
+            el:'#app',
+            data:{
+                searchTxt:''
+            },
+            components:{
+                'comp-model':compModel
+            },
+            methods: {
+                getData(val){
+                    this.searchTxt = val
+                }
+            },
+        })
+    </script>
+</body>
+</html>

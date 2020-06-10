@@ -1,0 +1,64 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-05-27 16:16:39
+ * @LastEditTime: 2020-06-01 20:07:28
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-demo\vue02.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0">
+    <title>v-model</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <input
+  v-bind:value="searchTxt"
+  v-on:input="searchTxt = $event.target.value"
+> -->
+        <comp-a :value='searchTxt' @input="getMess($event)"></comp-a>
+        <!-- <comp-a v-model='searchTxt'></comp-a> -->
+    </div>
+    <script>
+        var compA = ({
+            props:{
+                xdata:{
+                    type:String
+                }
+            },
+            data(){
+                return{
+                    
+                }
+            },
+            template:`<input type="text" :value='value' @input='sendMess'>`,
+            methods:{
+                sendMess(event){
+                    this.$emit('input',event.target.value)
+                }
+            }
+
+        })
+        var app = new Vue({
+            el:'#app',
+            components:{
+                'comp-a':compA
+            },
+            data:{
+                title:'hello world',
+                searchTxt:''
+            },
+            methods: {
+                getMess(val){
+                    this.searchTxt = val
+                }
+            },
+        })
+    </script>
+</body>
+</html>
