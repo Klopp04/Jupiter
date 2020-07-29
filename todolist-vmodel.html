@@ -1,0 +1,141 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-10 15:12:04
+ * @LastEditTime: 2020-06-12 14:22:32
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-demo\todolist02.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todolist02 2020/6/10 15:12</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <comp-input :value='inputTxt' @inputfunc='inputFuncF'></comp-input> -->
+        <!-- <comp-input ref='vmod' :value='inputValue' @input='inputValue = $event'></comp-input> $event就是子组件传过来的参数-->
+        <!-- <comp-input ref='vmod' :value='inputValue' @input='inputFuncF'></comp-input> -->
+        <comp-input ref='vmod' v-model='inputValue'></comp-input>
+        <!-- <input type="text" :value='inputValue' @input='inputValue = $event.target.value'> -->
+        <button @click='submitTxt'>submit</button>
+        <br/><br/>
+        <div>todo:</div>
+        <ul>
+            <li is="comp-v" 
+            v-for='(item,index) in todoList' 
+            :key="item" :content='{item,index,type:"todo"}'
+            @todoclick = 'todoClick'></li>
+        </ul>
+        <br/><br/>
+        <div>done:</div>
+        <ul>
+            <li is="comp-v" 
+            v-for='(item,index) in doneList' 
+            :key="item" :content='{item,index,type:"done"}'
+            @doneclick = 'doneClick'></li>
+        </ul>
+    </div>
+    <script>
+        //todo-list组件
+        var compV = ({
+            props:{
+                content:{
+                    type:Object,
+                    default:{}
+                },
+            },
+            data() {
+                return {
+                    val:this.content.item,
+                    ind:this.content.index
+                }
+            },
+            template:`<li @click='compClick'>{{val}}</li>`,
+            mounted() {
+                this.val = this.content.item
+            },
+            methods:{
+                compClick(){
+                    this.ind = this.content.index;
+                    if(this.content.type == 'todo'){
+                        this.$emit('todoclick',this.ind)
+                    }else{
+                        this.$emit('doneclick',this.ind)
+                    }
+                    
+                }
+            }
+        });
+        // v-model组件
+        var compInput = ({
+            model:{
+                props:'value',
+                event:'input'
+            },
+            props:{
+                value:{
+                    type:String
+                }
+            },
+            data() {
+                return {
+                    
+                }
+            },
+            template:`<input type="text" :value='value' @input='inputFunc'>`,
+            methods:{
+                inputFunc(event){
+                    this.$emit('input',event.target.value)
+                },
+                dataClear(){
+                    this.inputValue = ''
+                }
+
+            },
+            computed: {
+                
+            },
+        })
+
+        var app = new Vue({
+            el:'#app',
+            components:{
+                'comp-v':compV,
+                'comp-input':compInput
+            },
+            data:{
+                title:'hello',
+                inputValue:'',
+                todoList:[],
+                doneList:[],
+                inputTxt:''
+            },
+            methods: {
+                submitTxt(){
+                    this.todoList.push(this.inputValue)
+                    this.inputValue = ''
+                    // this.$refs.vmod.dataClear()
+                },
+                todoClick(ind){
+                    console.log(ind)
+                    console.log(this.todoList)
+                    this.doneList.push(this.todoList[ind])
+                    this.todoList.splice(ind,1)
+                },
+                doneClick(ind){
+                    this.todoList.push(this.doneList[ind])
+                    this.doneList.splice(ind,1)
+                },
+                inputFuncF(val){
+                    this.inputValue = val
+                    console.log(this.inputValue)
+                }
+            },
+        })
+    </script>
+</body>
+</html>

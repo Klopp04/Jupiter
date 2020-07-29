@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 19:36:33
- * @LastEditTime: 2020-06-04 20:03:06
+ * @LastEditTime: 2020-06-12 14:25:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-demo\radioSingle.html
@@ -16,87 +16,49 @@
 </head>
 <body>
     <div id="app">
-        <comp-b>
+        <comp-a :checkflag='checkflagF' @changeflag='changeflagF'>
 
-        </comp-b>
-        <comp-a :chooseflag='chooseFlag'>
-
-        </comp-a>
+        </comp-a>        
     </div>
     <script>
         var compA = ({
-            template:`<input checked='flag' type="radio" @click='changeBtn'>`,
+            template:`<input ref='ckb' type="radio" :checked='checkflag' @click='changeFlag'>`,
             props:{
-                chooseflag:{
+                checkflag:{
                     type:Boolean,
                     default:false
                 }
             },
             data() {
                 return {
-                    flag:this.chooseflag
-                }
-            },
-            methods: {
-                changeBtn(){
-                    this.flag=!this.flag
-                    console.log(this.flag)
-                }
-            },
-        })
-        var compB = ({
-            template:`<div @click='changeFlag' class='btnOne' :class='btnSingle'></div>`,
-            props:{
-                
-            },
-            data() {
-                return {
-                    btnSingle:'squareNone'
+
                 }
             },
             methods: {
                 changeFlag(){
-                    
+                    console.log(this.$refs.ckb)
+                    this.$emit('changeflag',this.checkflag)
                 }
             },
         })
         var app = new Vue({
             el:'#app',
             components:{
-                'comp-b':compB,
                 'comp-a':compA,
             },
             data:{
-                chooseFlag:false,
-                
+                checkflagF:false
             },
             methods:{
-                changeFlag(){
-                    this.chooseFlag = !this.chooseFlag
-                    if(this.chooseFlag){
-                        this.btnSingle = 'squareChecked'
-                    }else{
-                        this.btnSingle = 'squareNone'
-                    }
-                    console.log(this.chooseFlag)
+                changeflagF(val){
+                    console.log(val)
+                    this.checkflagF = !val
                 }
             }
         })
     </script>
     <style>
-        .btnOne{
-            width: 30px;
-            height: 30px;
-            background-repeat: no-repeat;
-            background-size: 100% 100%; 
-            background-position: center;
-        }
-        .squareNone {
-            background-image: url(./img/fang.png);
-        }
-        .squareChecked {
-            background-image: url(./img/fangChecked.png);
-        }
+        
     </style>
 </body>
 </html>

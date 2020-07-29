@@ -1,0 +1,126 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-03 19:36:33
+ * @LastEditTime: 2020-06-12 19:40:00
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue-demo\radioSingle.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>radioSingle</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- <comp-b :value='obj.isChoose' @input='getChooseVal'>
+
+        </comp-b> -->
+
+        <comp-b v-model='obj.isChoose'>
+
+        </comp-b>
+        
+    </div>
+    <script>
+        var compB = ({
+            model:{
+                props:'value',
+                event:'input'
+            },
+            template:`<div class='choiceWrap' @click='changeImg'>
+                          <span class='choicebox' :class='backIcon'></span> 
+                          <span>选中</span>
+                      </div>`,
+            props:{
+                value:{
+                    type:[String,Number],
+                    default:'1'
+                }
+            },
+            data() {
+                return {
+                    checkVal:''
+                }
+            },
+            mounted() {
+                this.checkVal = this.value
+            },
+            computed: {
+                // checkVal:{
+                //     set(val){
+                //         this.value = val
+                //     },
+                //     get(){
+                //         return this.value
+                //     }
+                // },
+                backIcon(){
+                    if(this.checkVal == 1){
+                        return 'iconSquare'
+                    }else{
+                        return 'iconSquareSelected'
+                    }
+                }
+            },
+            methods: {
+                changeImg(){
+                    this.checkVal = this.checkVal==1?2:1
+                    this.$emit('input',this.checkVal)
+                }
+            },
+            watch: {
+                value(val,oldVal){
+                    console.log(val,oldVal)
+                    console.log(this.checkVal)
+                    this.checkVal = val
+                }
+            },
+        })
+        var app = new Vue({
+            el:'#app',
+            components:{
+                'comp-b':compB,
+            },
+            data:{
+                obj:{isChoose:1}
+            },
+            methods:{
+                getChooseVal(val){
+                    console.log(val)
+                    console.log(this.obj)
+                    this.obj.isChoose = val 
+                    //这里始终还是要给obj.isChoose赋值，因为它是最终需要的数据
+                    //回显是它，保存也是它，一般如此。但会多触发一次父子组件传值，触发子组件的watch以及逻辑和赋值
+                }
+            }
+        })
+    </script>
+    <style>
+        .choiceWrap{
+            display: flex;
+            align-items: center;
+        }
+        .choicebox{
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+        }
+        .iconSquare{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url('./img/fang.png');
+        }
+        .iconSquareSelected{
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-image: url('./img/fangChecked.png');
+        }
+        
+    </style>
+</body>
+</html>
